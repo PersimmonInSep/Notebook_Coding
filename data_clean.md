@@ -43,3 +43,57 @@ data["fixed_carport_num"] = data["fixed_carport_num"].str.split("(").str[0]
             years = " ".join(years)
             return years
 ```
+
+### extract()
+`extract()`方法和`search()`函数的作用是类似的，都用于从字符串中提取特定的模式或信息。但是它们在使用方式和适用场景上有一些区别：
+
+1. **Pandas vs. re 模块**：
+   - `extract()`是Pandas DataFrame/Series对象的方法，用于处理DataFrame中的字符串数据。
+   - `re.search()`是Python标准库中re模块的函数，用于在普通的Python字符串中搜索匹配的模式。
+
+2. **处理对象**：
+   - `extract()`用于处理Pandas DataFrame/Series中的字符串列。
+   - `re.search()`用于处理普通的Python字符串。
+
+3. **返回结果**：
+   - `extract()`返回一个新的Pandas Series，其中包含从字符串中提取的信息。
+   - `re.search()`返回一个匹配对象，需要使用其方法（如`group()`）来提取匹配的信息。
+
+在实际使用中，如果你处理的数据是DataFrame，特别是需要在DataFrame的某一列中提取信息，那么使用`extract()`会更方便。但如果你只需要在普通的字符串中搜索和提取信息，则使用`re.search()`会更合适。
+
+如果`extract()`方法在字符串中没有找到满足条件的模式，它将返回NaN（Not a Number），这是Pandas中表示缺失值的标记。
+
+`extract()`方法可以处理包含空值的列。当对包含空值的列使用extract()时，它会忽略空值，并在非空值的字符串上执行提取操作。
+
+例如：
+```python
+    # community_link - "https://xm.anjuke.com/community/view/352783"
+    # community_cd   - "352783"
+    data["community_cd"] = data["community_link"].str.extract(r'(\d+)') 
+```
+
+### 获取数据框中，最近一个月的数据
+```python
+    import pandas as pd
+    from datetime import datetime, timedelta
+
+    # 创建一个示例 DataFrame
+    data = {'date_str': ['2024-04-15', '2024-05-10', '2024-05-20', '2024-06-01']}
+    df = pd.DataFrame(data)
+
+    # 将 'date_str' 列转换为时间列
+    df['date'] = pd.to_datetime(df['date_str'])
+
+    # 获取当前日期
+    current_date = datetime.now()
+
+    # 计算最近一个月的开始日期
+    one_month_ago = current_date - timedelta(days=30)
+
+    # 筛选出最近一个月的数据
+    recent_data = df[df['date'] >= one_month_ago]
+
+    # 输出结果
+    print(recent_data)
+```
+
