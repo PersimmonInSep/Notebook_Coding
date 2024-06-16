@@ -97,3 +97,4 @@ data["fixed_carport_num"] = data["fixed_carport_num"].str.split("(").str[0]
     print(recent_data)
 ```
 
+111
